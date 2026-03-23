@@ -1,50 +1,104 @@
-# Welcome to your Expo app 👋
+# 📱 Pokédex App
+A simple Pokédex mobile/web app that displays a list of Pokémon and allows users to view detailed information about each Pokémon.
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+# 📖 About
 
-## Get started
+This project fetches data from the PokéAPI and presents it in a clean UI with two main screens:
 
-1. Install dependencies
+- Home Screen (Pokémon List)
+- Details Screen (Selected Pokémon Info)
 
-   ```bash
-   npm install
-   ```
+  # 🚀 Features
+- 🔍 Fetch and display Pokémon list
+- 🖼️ Show Pokémon images (front & back)
+- 🧬 Display Pokémon types
+- 📄 View detailed Pokémon information
+- ⚡ Async data fetching using API
 
-2. Start the app
+  # 📱 Screens
+- 🏠 Home Screen (Pokémon List)
+- Displays a list of Pokémon (limit: 20)
+- Each item shows:
+   - Name
+   - Front image
+   - Types
 
-   ```bash
-   npx expo start
-   ```
+- Data is fetched from:https://pokeapi.co/api/v2/pokemon/?limit=20
+- Additional details are fetched per Pokémon:
+   - Front image
+   - Back image
+   - Types
 
-In the output, you'll find options to open the app in a
+# 🛠️ Tech Stack
+- JavaScript / TypeScript
+- React / React Native (based on your implementation)
+- Fetch API
+- PokéAPI
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+# 🔧 Core Logic
+# Fetch Pokémon List
+```
+async function fetchData() {
+  try {
+    const response = await fetch('https://pokeapi.co/api/v2/pokemon/?limit=20');
+    const data = await response.json();
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+    const detailsPokeman = await Promise.all(
+      data.results.map(async (pokemon) => {
+        const res = await fetch(pokemon.url);
+        const resData = await res.json();
+        return {
+          name: pokemon.name,
+          image: resData.sprites.front_default,
+          imageBack: resData.sprites.back_default,
+          types: resData.types
+        };
+      })
+    );
 
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+    setPokemonData(detailsPokeman);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+}
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+# Fetch Pokémon Details
+```
+async function fetchPokemnaDetails() {
+  try {
+    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${parms.name}`);
+    const data = await response.json();
 
-## Learn more
+    const detailsPokeman = {
+      name: data.name,
+      image: data.sprites.front_default,
+      imageBack: data.sprites.back_default,
+      types: data.types,
+    };
 
-To learn more about developing your project with Expo, look at the following resources:
+    setPokemonData(detailsPokeman);
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+}
+```
 
-## Join the community
+# 📦 Installation
+- git clone https://github.com/chandra1591/pokedex.git
+- cd pokedex
+- npm install
 
-Join our community of developers creating universal apps.
+# ▶️ Run the Project
+- npm start
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+# 🌐 API Used
+https://pokeapi.co/
+
+# Screens
+
+<img width="320" height="568" alt="Simulator Screenshot - iPhone 16 Pro - 2026-02-22 at 22 32 44" src="https://github.com/user-attachments/assets/f3c9b72c-b0eb-4cca-8de6-9131c97c5088" />
+
+<img width="320" height="568" alt="Simulator Screenshot - iPhone 16 Pro - 2026-02-22 at 22 32 51" src="https://github.com/user-attachments/assets/51b9254d-f7c6-4c19-b9a6-169a97c98b9b" />
+
